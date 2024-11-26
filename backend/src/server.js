@@ -22,10 +22,10 @@ app.get("/", (req, res) => res.send("hola"));
 app.use("/api/v1/auth", require("./routes/auth.routes"));
 app.use("/api/v1/users", require("./routes/user.routes"));
 app.use("/api/v1/products", require("./routes/product.routes"));
-app.use("/api/v1/carts", require("./routes/cart.routes"));
-app.use("/api/v1/orders", require("./routes/order.routes"));
-app.use("/api/v1/coupons", require("./routes/coupon.routes"));
-app.use("/api/v1/history", require("./routes/history.routes"));
-app.use("/api/v1/address", require("./routes/address.routes"));
+// app.use("/api/v1/carts", require("./routes/cart.routes"));
+// app.use("/api/v1/orders", require("./routes/order.routes"));
+// app.use("/api/v1/coupons", require("./routes/coupon.routes"));
+// app.use("/api/v1/history", require("./routes/history.routes"));
+// app.use("/api/v1/address", require("./routes/address.routes"));
 
 module.exports = app;
