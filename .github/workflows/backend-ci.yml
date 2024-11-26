@@ -1,0 +1,76 @@
+name: Backend CI
+
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'backend/**'
+
+
+jobs:
+  test:
+    
+    runs-on: ubuntu-latest
+
+    
+    strategy:
+      matrix:
+        node-version: [10.x, 14.x, 16.x, 18.x, 20.x]
+
+    
+    steps:
+    # Checkout code
+    - uses: actions/checkout@v3
+
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.10.0
+      with:
+        mongodb-version: 5.0
+
+    
+    - name: Navigate to backend
+      run: cd backend
+
+    
+    - name: Install Dependencies
+      run: |
+        cd backend
+        npm ci
+
+    #  linting
+    # - name: Run ESLint
+    #   run: |
+    #     cd backend
+    #     npm install eslint --save-dev
+    #     npx eslint .
+
+    
+    - name: Run Tests
+      run: |
+        cd backend
+        npm test
+
+    # Optional: Code cov
+    # - name: Generate Coverage Report
+    #   run: |
+    #     cd backend
+    #     npm run test:coverage
+    #
+    # 
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    #     files: ./backend/coverage/coverage-final.json
