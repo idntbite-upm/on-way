@@ -71,6 +71,9 @@ export async function POST(req: Request) {
                 address: "Empty",
             };
 
+            // Log user data
+            console.log("User data:", userData);
+
             // Send to your backend
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/register`,
@@ -83,7 +86,12 @@ export async function POST(req: Request) {
                 },
             );
 
+            // Log response status
+            console.log("Backend response status:", response.status);
+
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Backend response error:", errorText);
                 throw new Error("Failed to create user in database");
             }
 

@@ -86,3 +86,20 @@ exports.deleteShop = async (req, res) => {
         return res.status(500).json(error);
     }
 };
+
+exports.getShopProducts = async (req, res) => {
+    try {
+        const { shopId } = req.params;
+
+        const shop = await Shop.findById(shopId).populate("products");
+        if (!shop) {
+            return res.status(404).json({ message: "Shop not found" });
+        }
+
+        const products = await Product.find({ shop: shopId });
+
+        res.status(200).json({ data: products });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+};
