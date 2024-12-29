@@ -1,6 +1,7 @@
 export interface Shop {
 	_id: string;
 	name: string;
+	description: string;
 	openingTime: string;
 	closingTime: string;
 	rating: number;

@@ -25,6 +25,8 @@ app.use("/api/v1/auth", require("./routes/auth.routes"));
 app.use("/api/v1/users", require("./routes/user.routes"));
 app.use("/api/v1/products", require("./routes/product.routes"));
 app.use("/api/v1/shops", require("./routes/shop.routes"));
+app.use("/api/v1/categories", require("./routes/category.routes"));
+app.use("/api/v1/marketproducts", require("./routes/marketproduct.routes"));
 app.get("/test", (req, res) => {
 	res.json({ message: "Server is running" });
 });

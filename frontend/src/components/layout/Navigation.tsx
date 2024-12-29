@@ -7,7 +7,7 @@ const navigation = [
     { name: "Home", href: "/" },
     { name: "Shops", href: "/shops" },
     { name: "OnWay Marketplace", href: "/marketplace" },
-    { name: "Contact", href: "/contact" },
+    { name: "About Us", href: "/about" },
 ];
 
 export default function Navigation() {
