@@ -38,7 +38,7 @@ export default function CategoryDetailPage() {
             `${process.env.NEXT_PUBLIC_API_URL}/api/v1/categories/${categoryData._id}`,
           ),
           api.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketproducts/${categoryData._id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/marketproducts/category/${categoryData._id}`,
           ),
         ]);
 

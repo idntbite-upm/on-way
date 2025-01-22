@@ -1,18 +1,23 @@
-const { Router } = require('express')
-const router = Router()
-const categoryCtrl = require('../controllers/category.controller')
-const { adminMdlw } = require('../middlewares/admin.middleware')
+// backend/src/routes/category.routes.js
+const { Router } = require("express");
+const router = Router();
+const categoryCtrl = require("../controllers/category.controller");
+const { adminMdlw } = require("../middlewares/admin.middleware");
 
-router.get('/', categoryCtrl.getAllCategories)
+// Public routes (no authentication required)
+router.get("/", categoryCtrl.getAllCategories);
+router.get("/:id", categoryCtrl.getCategoryById);
 
-router.get('/:id', categoryCtrl.getCategoryById)
+// Admin routes (protected routes)
+router.use(adminMdlw); // Apply adminMdlw to all routes below this line
 
-router.post('/', adminMdlw, categoryCtrl.createCategory)
+// Group all admin-only operations
+router.route("/").post(categoryCtrl.createCategory);
 
-router.put('/:id', adminMdlw, categoryCtrl.updateCategory)
+router
+	.route("/:id")
+	.put(categoryCtrl.updateCategory)
+	.delete(categoryCtrl.deleteCategory);
 
-router.delete('/:id', adminMdlw, categoryCtrl.deleteCategory)
-
-router.patch('/:id/toggle', adminMdlw, categoryCtrl.toggleCategoryStatus)
-
-module.exports = router
+router.patch("/:id/toggle", categoryCtrl.toggleCategoryStatus);
+module.exports = router;

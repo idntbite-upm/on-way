@@ -1,16 +1,21 @@
-const { Router } = require('express')
-const router = Router()
-const productCtrl = require('../controllers/product.controller')
-const { adminMdlw } = require('../middlewares/admin.middleware')
+// backend/src/routes/product.routes.js
+const { Router } = require("express");
+const router = Router();
+const productCtrl = require("../controllers/product.controller");
+const { adminMdlw } = require("../middlewares/admin.middleware");
 
-router.get('/', productCtrl.getAllProducts)
+// Public routes
+router.get("/", productCtrl.getAllProducts);
+router.get("/:id", productCtrl.getProductById);
 
-router.get('/:id', productCtrl.getProductById)
+// Admin routes
+router.use(adminMdlw); // Apply adminMdlw to all routes below this line
 
-router.post('/', adminMdlw, productCtrl.createProduct)
+router.route("/").post(productCtrl.createProduct);
 
-router.put('/:id', adminMdlw, productCtrl.updateProduct)
+router
+	.route("/:id")
+	.put(productCtrl.updateProduct)
+	.delete(productCtrl.deleteProduct);
 
-router.delete('/:id', adminMdlw, productCtrl.deleteProduct)
-
-module.exports = router
+module.exports = router;

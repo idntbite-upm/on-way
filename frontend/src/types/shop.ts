@@ -9,6 +9,7 @@ export interface Shop {
 	isOpen: boolean;
 	location: string;
 	products: Product[];
+	
 }
 
 export interface Product {
@@ -18,4 +19,5 @@ export interface Product {
 	price: number;
 	desc: string;
 	shop: string;
+	quantity: number; // add to schema
 }

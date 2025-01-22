@@ -1,24 +1,67 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/user.model')
+const jwt = require("jsonwebtoken");
+const User = require("../models/user.model");
 
 exports.authMdlw = async (req, res, next) => {
     try {
-        // if (!req.headers.authorization) 
-            // return res.status(401).json({ok: false, msg: 'unauthorized'})
+        // Get token from header
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({
+                ok: false,
+                message: "No authorization token provided",
+            });
+        }
 
-        const token = await req.headers.authorization.split(' ')[1] || req.headers.authorization
-        //token verify
-        const decode = await jwt.verify(token, process.env.JWT_KEY || 'secretKey')
+        // Extract token
+        const token = authHeader.startsWith("Bearer ")
+            ? authHeader.split(" ")[1]
+            : authHeader;
 
-        // const _user = await User.findOne({_id: decode._id})
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_KEY || "secretKey");
 
-        // if (!_user) return res.status(404).json({ok: false, msg: 'user not found'}) 
+        // Find user
+        const user = await User.findById(decoded._id).select("-password");
+        if (!user) {
+            return res.status(401).json({
+                ok: false,
+                message: "User not found",
+            });
+        }
 
-        // req.user = _user
-        // next()
-        
+        // Add user to request object
+        req.user = user;
+        next();
     } catch (error) {
-        console.log(error)
-        return res.status(500).json(error)
+        if (error.name === "JsonWebTokenError") {
+            return res.status(401).json({
+                ok: false,
+                message: "Invalid token",
+            });
+        }
+        if (error.name === "TokenExpiredError") {
+            return res.status(401).json({
+                ok: false,
+                message: "Token expired",
+            });
+        }
+        return res.status(500).json({
+            ok: false,
+            message: "Server error",
+            error: error.message,
+        });
     }
-}
+};
+
+// Optional: Role-based middleware
+exports.authorize = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({
+                ok: false,
+                message: "Not authorized to access this route",
+            });
+        }
+        next();
+    };
+};

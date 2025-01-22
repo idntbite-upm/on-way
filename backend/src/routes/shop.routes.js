@@ -1,19 +1,19 @@
+// backend/src/routes/shop.routes.js
 const express = require("express");
 const router = express.Router();
 const shopCtrl = require("../controllers/shop.controller");
 const { adminMdlw } = require("../middlewares/admin.middleware");
-const { getShopProducts } = require("../controllers/shop.controller");
 
+// Public routes
 router.get("/", shopCtrl.getAllShops);
-
 router.get("/:id", shopCtrl.getShopById);
+router.get("/:shopId/products", shopCtrl.getShopProducts);
 
-router.post("/", adminMdlw, shopCtrl.createShop);
+// Admin routes
+router.use(adminMdlw); // Apply adminMdlw to all routes below this line
 
-router.put("/:id", adminMdlw, shopCtrl.updateShop);
+router.route("/").post(shopCtrl.createShop);
 
-router.delete("/:id", adminMdlw, shopCtrl.deleteShop);
-
-router.get("/:shopId/products", getShopProducts);
+router.route("/:id").put(shopCtrl.updateShop).delete(shopCtrl.deleteShop);
 
 module.exports = router;

@@ -1,26 +1,19 @@
-const { Router } = require('express')
-const router = Router()
-const { authMdlw } = require('../middlewares/auth.middleware')
-const userCtrl = require('../controllers/user.controller')
+const { Router } = require("express");
+const router = Router();
+const { adminMdlw } = require("../middlewares/admin.middleware");
+const userCtrl = require("../controllers/user.controller");
 
-router.get('/',[
-    authMdlw
-],  userCtrl.getAllUsers )
+// Protected routes with authentication
+router.route("/current").get(userCtrl.getCurrentUser);
 
-router.get('/current-user',[
-    authMdlw
-],  userCtrl.getCurrentUser )
+router.use(adminMdlw); // Apply authMdlw to all routes below this line
 
-router.get('/:id',[
-    authMdlw
-],  userCtrl.getUserById )
+router.route("/").get(userCtrl.getAllUsers);
 
-router.put('/:id', [
+router
+	.route("/:id")
+	.get(userCtrl.getUserById)
+	.put(userCtrl.editUser)
+	.delete(userCtrl.deleteUser);
 
-],  userCtrl.editUser)
-
-router.delete('/:id', [
-
-],  userCtrl.deleteUser)
-
-module.exports = router
+module.exports = router;
